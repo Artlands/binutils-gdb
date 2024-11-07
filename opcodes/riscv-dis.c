@@ -76,6 +76,7 @@ static asection *last_map_section = NULL;
 /* Register names as used by the disassembler.  */
 static const char (*riscv_gpr_names)[NRC];
 static const char (*riscv_fpr_names)[NRC];
+static const char (*riscv_xbgas_names)[NRC];
 
 /* If set, disassemble as most general instruction.  */
 static bool no_aliases = false;
@@ -91,6 +92,7 @@ set_default_riscv_dis_options (void)
 {
   riscv_gpr_names = riscv_gpr_names_abi;
   riscv_fpr_names = riscv_fpr_names_abi;
+	riscv_xbgas_names = riscv_xbgas_names_numeric;
   no_aliases = false;
 }
 
@@ -105,6 +107,7 @@ parse_riscv_dis_option_without_args (const char *option)
     {
       riscv_gpr_names = riscv_gpr_names_numeric;
       riscv_fpr_names = riscv_fpr_names_numeric;
+			riscv_xbgas_names = riscv_xbgas_names_numeric;
     }
   else if (strcmp (option, "max") == 0)
     all_ext = true;
@@ -878,6 +881,26 @@ print_insn_args (const char *oparg, insn_t l, bfd_vma pc, disassemble_info *info
 	    default:
 	      goto undefined_modifier;
 	    }
+	  break;
+
+	case 'H': /* EXT1: xBGAS extended register */
+    print (info->stream, dis_style_register, "%s",
+		 riscv_xbgas_names[rs1]);
+    break;
+  
+  case 'J': /* EXT2, xBGAS extended register */
+    print (info->stream, dis_style_register, "%s",
+     riscv_xbgas_names[EXTRACT_OPERAND (RS2, l)]);
+    break;
+
+  case 'G': /* EXTD/EXT3, xBGAS extended register */
+    print (info->stream, dis_style_register, "%s",
+     riscv_xbgas_names[rd]);
+    break;
+
+	case 'g': /* Used in xBGAS bulk transfer instructions  */
+	  print (info->stream, dis_style_register, "%s",
+		 riscv_gpr_names[EXTRACT_OPERAND (RS3, l)]);
 	  break;
 
 	default:
