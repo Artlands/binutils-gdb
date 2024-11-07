@@ -1465,12 +1465,6 @@ static struct riscv_supported_ext riscv_supported_std_zxm_ext[] =
   {NULL, 0, 0, 0, 0}
 };
 
-static struct riscv_supported_ext riscv_supported_xbgas_ext[] =
-{
-  {"xbgas",	ISA_SPEC_CLASS_DRAFT,	2, 0, 0 },
-  {NULL, 0, 0, 0, 0}
-};
-
 static struct riscv_supported_ext riscv_supported_vendor_x_ext[] =
 {
   {"xcvalu",		ISA_SPEC_CLASS_DRAFT,	1, 0, 0 },
@@ -1497,6 +1491,7 @@ static struct riscv_supported_ext riscv_supported_vendor_x_ext[] =
   {"xventanacondops",	ISA_SPEC_CLASS_DRAFT,	1, 0, 0 },
   {"xsfvcp",		ISA_SPEC_CLASS_DRAFT,	1, 0, 0 },
   {"xsfcease",		ISA_SPEC_CLASS_DRAFT,	1, 0, 0 },
+  {"xbgas",	ISA_SPEC_CLASS_DRAFT,	2, 0, 0 },
   {NULL, 0, 0, 0, 0}
 };
 
@@ -1507,7 +1502,6 @@ const struct riscv_supported_ext *riscv_all_supported_ext[] =
   riscv_supported_std_s_ext,
   riscv_supported_std_zxm_ext,
   riscv_supported_vendor_x_ext,
-  riscv_supported_xbgas_ext,
   NULL
 };
 
@@ -1518,7 +1512,6 @@ enum riscv_prefix_ext_class
   RV_ISA_CLASS_S,
   RV_ISA_CLASS_ZXM,
   RV_ISA_CLASS_X,
-  RV_ISA_CLASS_XBGAS,
   RV_ISA_CLASS_SINGLE
 };
 
@@ -1536,7 +1529,6 @@ struct riscv_parse_prefix_config
 };
 static const struct riscv_parse_prefix_config parse_config[] =
 { 
-  {RV_ISA_CLASS_XBGAS, "xbgas"},
   {RV_ISA_CLASS_ZXM, "zxm"},
   {RV_ISA_CLASS_Z, "z"},
   {RV_ISA_CLASS_S, "s"},
@@ -1589,8 +1581,6 @@ riscv_recognized_prefixed_ext (const char *ext)
     return riscv_known_prefixed_ext (ext, riscv_supported_std_zxm_ext);
   case RV_ISA_CLASS_S:
     return riscv_known_prefixed_ext (ext, riscv_supported_std_s_ext);
-  case RV_ISA_CLASS_XBGAS:
-    return riscv_known_prefixed_ext (ext, riscv_supported_xbgas_ext);
   case RV_ISA_CLASS_X:
     /* Only the single x is unrecognized.  */
     if (strcmp (ext, "x") != 0)
@@ -1765,7 +1755,6 @@ riscv_get_default_ext_version (enum riscv_spec_class *default_isa_spec,
   switch (class)
     {
     case RV_ISA_CLASS_ZXM: table = riscv_supported_std_zxm_ext; break;
-    case RV_ISA_CLASS_XBGAS: table = riscv_supported_xbgas_ext; break;
     case RV_ISA_CLASS_Z: table = riscv_supported_std_z_ext; break;
     case RV_ISA_CLASS_S: table = riscv_supported_std_s_ext; break;
     case RV_ISA_CLASS_X: table = riscv_supported_vendor_x_ext; break;
